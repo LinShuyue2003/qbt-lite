@@ -59,7 +59,7 @@ qbt-lite/
 
 ### 1. Clone repository
 ```bash
-git clone https://github.com/<your-username>/qbt-lite.git
+git clone https://github.com/LinShuyue2003/qbt-lite.git
 cd qbt-lite
 ```
 
