@@ -1,0 +1,16 @@
+[project]
+name = "qbt-lite"
+version = "0.1.0"
+description = "A minimal teaching-first quant backtester (stocks, single symbol, daily bars)"
+authors = [{name = "You"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "matplotlib>=3.7",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+dist/
+build/
+*.egg-info/
+.ipynb_checkpoints/
+# OS
+.DS_Store
+Thumbs.db
+# Outputs
+examples/output/
