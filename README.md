@@ -1,51 +1,113 @@
-# qbt-lite (Mini Quant Backtester)
+# QBT-Lite 📈  
+A lightweight quantitative backtesting framework in Python
 
-A teaching-first, minimal backtesting framework in Python that runs end-to-end:
-**data → strategy → backtest → equity curve → metrics**.
+---
 
-> ⚠️ Simplified by design. Great for learning; not intended for live trading.
+## 🌟 Project Overview
+This project is a **from-scratch backtesting framework** that covers the full workflow of  
+**data import → strategy execution → order simulation → performance evaluation → automated reporting**.  
 
-## Features
-- CSV data loader (OHLCV)
-- Event-driven backtest engine (daily bars, single symbol)
-- Simple broker (commission bps, fixed slippage)
-- Portfolio accounting (cash + position)
-- Performance metrics (annual return, vol, Sharpe, max drawdown)
-- Example strategy: SMA crossover
-- Example script to run an end-to-end demo
+It is designed for **educational purposes** and as a **portfolio project** to demonstrate quantitative research skills.
 
-## Quickstart
+**Resume Highlights:**
+- Built an end-to-end backtesting framework from data loading, strategy execution, to performance reporting  
+- Supports **multi-asset backtesting** and **portfolio simulation**  
+- Calculates return, volatility, Sharpe ratio, and max drawdown  
+- Automatically generates equity curves, drawdown charts, and performance reports  
 
-### 1) Install
+---
+
+## ⚙️ Tech Stack
+- **Python 3.10+**
+- **pandas** for data handling  
+- **matplotlib** for visualization  
+- **pytest** (optional, for unit testing extension)
+
+---
+
+## 📂 Project Structure
+```
+qbt-lite/
+│── qbt/
+│   ├── core/              # Engine, broker, portfolio
+│   ├── data/              # Data loading
+│   ├── strategies/        # Strategy library (SMA, Momentum, Top-N Momentum)
+│   └── report/            # Automated report generation
+│
+│── examples/
+│   ├── run_sma_example.py          # SMA strategy demo
+│   ├── run_momentum_example.py     # Single-asset momentum demo
+│   ├── run_multi_momentum.py       # Multi-asset Top-N momentum demo
+│   └── output/                     # Output charts
+│
+│── reports/                        # Auto-generated reports (CSV/Markdown/PNG)
+│── README.md
+```
+
+---
+
+## 🚀 Quick Start
+### 1. Clone repository
 ```bash
-python -m venv .venv
-# Windows: .venv\\Scripts\\activate
-# macOS/Linux:
-source .venv/bin/activate
+git clone https://github.com/<your-username>/qbt-lite.git
+cd qbt-lite
+```
+
+### 2. Install dependencies
+```bash
 pip install -r requirements.txt
 ```
 
-### 2) Run the example
+### 3. Run examples
+#### SMA strategy
 ```bash
 python -m examples.run_sma_example
 ```
 
-This will print metrics and save a chart to `examples/output/equity.png`.
-
-## Project Layout
-```
-qbt/
-  data/loader.py
-  core/{engine.py,broker.py,portfolio.py,metrics.py,visualize.py}
-  strategies/{base.py,sma_cross.py}
-examples/
-  run_sma_example.py
+#### Single-asset momentum
+```bash
+python -m examples.run_momentum_example
 ```
 
-## Notes
-- Execution model: signal at close[t] executes at open[t+1], to avoid lookahead bias.
-- Commission is in **bps** (basis points) of traded notional; slippage is absolute price add-on/subtract.
-- Extend to multi-symbol by generalizing `Portfolio` (use dict of positions) and adjusting `Engine`.
+#### Multi-asset Top-N momentum
+```bash
+python -m examples.run_multi_momentum
+```
 
-## License
-MIT
+Results will be saved under `reports/`:
+- Performance tables (CSV / Markdown)  
+- Equity curve chart  
+- Drawdown chart  
+
+---
+
+## 📊 Example Results
+
+### Performance Table
+| annual_return | annual_vol | sharpe | max_drawdown | total_return |
+|---------------|------------|--------|--------------|--------------|
+| 0.1603        | 0.1123     | 1.3243 | -0.1137      | 0.4028       |
+
+### Equity Curve
+![equity](reports/multi_momentum_equity.png)
+
+### Drawdown Curve
+![drawdown](reports/multi_momentum_drawdown.png)
+
+---
+
+## 🔮 Future Improvements
+- Add more strategies (mean reversion, pairs trading, CTA futures)  
+- Advanced portfolio allocation (Kelly, risk parity)  
+- Integrate with live data sources (Tushare / yfinance)  
+- Web dashboard (Streamlit / Dash)  
+
+---
+
+## 📜 License
+MIT License
+
+---
+
+## 🤝 Acknowledgements
+This project is for learning and portfolio demonstration only. **Not financial advice.**
