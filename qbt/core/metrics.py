@@ -1,60 +1,38 @@
 from __future__ import annotations
 import numpy as np
 import pandas as pd
-from typing import Dict
+from typing import Dict, Optional
 
 def compute_drawdown(nav: pd.Series) -> pd.Series:
-    """Compute drawdown series from a NAV (equity) series.
-
-    Parameters
-    ----------
-    nav : pd.Series
-        Equity curve indexed by datetime.
-
-    Returns
-    -------
-    pd.Series
-        Drawdown series (0 at peaks, negative elsewhere).
-    """
     peak = nav.cummax()
-    dd = nav / peak - 1.0
-    return dd
+    return nav / peak - 1.0
 
-def performance_from_nav(nav: pd.Series, risk_free: float = 0.0, periods_per_year: int = 252) -> Dict[str, float]:
-    """Compute basic performance metrics from a NAV (equity) series.
-
-    Parameters
-    ----------
-    nav : pd.Series
-        Equity curve (e.g., starting at 1.0). Must be positive.
-    risk_free : float
-        Annualized risk-free rate (as a decimal, e.g. 0.02 = 2%).
-    periods_per_year : int
-        Number of bars per year (252 for daily, 12 for monthly).
-
-    Returns
-    -------
-    Dict[str, float]
-        annual_return, annual_vol, sharpe, max_drawdown, total_return
-    """
+def performance_from_nav(nav: pd.Series, risk_free: float = 0.0, periods_per_year: int = 252,
+                         benchmark_nav: Optional[pd.Series] = None) -> Dict[str, float]:
+    nav = nav.dropna()
     rets = nav.pct_change().dropna()
     if rets.empty:
-        return {k: float('nan') for k in ['annual_return','annual_vol','sharpe','max_drawdown','total_return']}
-    mean_r = rets.mean()
-    std_r = rets.std(ddof=0)
-    ann_ret = (1.0 + mean_r)**periods_per_year - 1.0
+        return {k: float('nan') for k in ['annual_return','annual_vol','sharpe','max_drawdown','total_return','sortino','calmar','information_ratio']}
+    mean_r = rets.mean(); std_r = rets.std(ddof=0)
+    ann_ret = (1+mean_r)**periods_per_year - 1
     ann_vol = std_r * np.sqrt(periods_per_year)
-    # Convert risk-free to per-period to compute excess return approximately
-    rf_period = (1.0 + risk_free)**(1.0/periods_per_year) - 1.0
+    rf_period = (1+risk_free)**(1/periods_per_year) - 1
     excess_ret = mean_r - rf_period
-    sharpe = np.nan if ann_vol == 0 else (excess_ret * periods_per_year) / ann_vol
-    dd = compute_drawdown(nav)
-    max_dd = dd.min()
-    total_ret = nav.iloc[-1] / nav.iloc[0] - 1.0
-    return {
-        "annual_return": float(ann_ret),
-        "annual_vol": float(ann_vol),
-        "sharpe": float(sharpe),
-        "max_drawdown": float(max_dd),
-        "total_return": float(total_ret),
-    }
+    sharpe = np.nan if ann_vol==0 else (excess_ret*periods_per_year)/ann_vol
+    dd = compute_drawdown(nav); max_dd = dd.min()
+    total_ret = nav.iloc[-1]/nav.iloc[0]-1
+    downside = rets[rets < rf_period]; downside_std = downside.std(ddof=0) if not downside.empty else 0.0
+    ann_down = downside_std * np.sqrt(periods_per_year)
+    sortino = np.nan if ann_down==0 else (excess_ret*periods_per_year)/ann_down
+    calmar = np.nan if max_dd==0 else ann_ret/abs(max_dd)
+    information_ratio = float('nan')
+    if benchmark_nav is not None:
+        bench = benchmark_nav.reindex(nav.index).ffill().dropna()
+        if len(bench)==len(nav):
+            active = rets - bench.pct_change().dropna()
+            if not active.empty:
+                sd = active.std(ddof=0)
+                information_ratio = float('nan') if sd==0 else (active.mean()*periods_per_year)/(sd*np.sqrt(periods_per_year))
+    return {"annual_return": float(ann_ret), "annual_vol": float(ann_vol), "sharpe": float(sharpe),
+            "max_drawdown": float(max_dd), "total_return": float(total_ret), "sortino": float(sortino),
+            "calmar": float(calmar), "information_ratio": float(information_ratio)}

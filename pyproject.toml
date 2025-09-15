@@ -1,16 +1,23 @@
 [project]
 name = "qbt-lite"
-version = "0.1.0"
-description = "A minimal teaching-first quant backtester (stocks, single symbol, daily bars)"
-authors = [{name = "You"}]
+version = "0.2.0"
+description = "A minimal teaching-first quant backtester with CLI/config, more strategies, and reports"
+authors = [{name = "Haozheng Li"}]
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = [
-    "pandas>=2.0",
-    "numpy>=1.24",
-    "matplotlib>=3.7",
-]
+dependencies = ["pandas>=2.0","numpy>=1.24","matplotlib>=3.7"]
+
+[project.optional-dependencies]
+yaml = ["pyyaml>=6.0"]
+ui = ["streamlit>=1.33","plotly>=5.22"]
+
+[project.scripts]
+qbt-lite = "qbt.cli:main"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=68","wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["qbt*"]
+exclude = ["reports*", "examples*", "tests*"]

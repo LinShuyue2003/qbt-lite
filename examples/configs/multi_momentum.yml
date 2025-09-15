@@ -1,0 +1,11 @@
+﻿strategy: topn_momentum
+params:
+  lookback: 60
+  top_n: 2
+  commission_bps: 0.0005
+  slippage: 0.01
+data:
+  source: mock     # mock | yfinance | tushare | csv
+  symbols: [AAA, BBB, CCC]
+  start: 2018-01-01
+  end: 2020-06-01
