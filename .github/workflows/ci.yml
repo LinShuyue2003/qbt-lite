@@ -13,9 +13,10 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -r requirements.txt
-      - run: python - <<'PY'
-import importlib
-for m in ["pandas", "numpy", "matplotlib"]:
-    importlib.import_module(m)
-print("Basic import smoke test OK")
-PY
+      - run: |
+          python - <<'PY'
+          import importlib
+          for m in ["pandas", "numpy", "matplotlib"]:
+              importlib.import_module(m)
+          print("Basic import smoke test OK")
+          PY
