@@ -17,6 +17,7 @@ This project is designed for **learning purposes** and as a **portfolio project*
 - Provides key metrics (Sharpe, Sortino, Calmar, Max Drawdown, etc.)  
 - Exports automated reports (CSV, Markdown, PNG charts)  
 - Comes with an **interactive Streamlit app** for easy strategy testing  
+- **NEW in v0.3.0**: Event-driven backtesting engine (intraday), trade-level metrics (win rate, profit factor, etc.)
 
 ---
 
@@ -35,15 +36,17 @@ This project is designed for **learning purposes** and as a **portfolio project*
 ```
 qbt-lite/
 │── qbt/
-│   ├── core/              # Engine, broker, portfolio, metrics
+│   ├── core/              # Engine, broker, portfolio, metrics, event_engine (NEW)
 │   ├── data/              # Data loading utilities
 │   ├── strategies/        # Strategy library (SMA, Momentum, TA strategies)
+│   ├── analytics/         # Extended metrics (Sortino, Calmar, Trade-level) (NEW)
 │   └── report/            # Automated reporting module
 │
 │── examples/
 │   ├── run_sma_example.py          # SMA strategy demo
 │   ├── run_momentum_example.py     # Single-asset momentum demo
 │   ├── run_multi_momentum.py       # Multi-asset Top-N momentum demo
+│   ├── run_event_driven_demo.py    # Event-driven intraday demo (NEW)
 │   └── configs/                    # Example config files (YAML/JSON)
 │
 │── reports/                        # Auto-generated reports (CSV/Markdown/PNG)
@@ -51,6 +54,7 @@ qbt-lite/
 │── tests/                          # Basic pytest unit tests
 │── pyproject.toml                   # Packaging & dependencies
 │── README.md
+│── CHANGELOG.md
 ```
 
 ---
@@ -75,7 +79,7 @@ pip install -e .
 
 For optional features:
 ```bash
-pip install pyyaml streamlit yfinance plotly
+pip install pyyaml streamlit yfinance plotly pytest
 ```
 
 ### 3. Run examples
@@ -123,12 +127,37 @@ Available strategies:
 
 ---
 
+## ⏱️ Event-Driven Backtest (NEW in v0.3.0)
+Run the new intraday event-driven demo:
+```bash
+python -m examples.run_event_driven_demo
+```
+Features:
+- Processes **minute bars** with event queue: Market → Strategy → Order → Fill  
+- Broker applies **commission + slippage**  
+- Portfolio logs **fills & equity**  
+- Produces both **return-based** and **trade-level** metrics  
+
+Outputs (in `reports/`):
+- `event_driven_demo_metrics.csv` / `.md`
+- `event_driven_demo_equity.png` / `event_driven_demo_drawdown.png`
+
+![Event-driven Equity Curve](docs/event_driven_demo_equity.png)
+
+---
+
 ## 📊 Example Performance Metrics
-Example results for multi-asset Top-N momentum:
+Example results for multi-asset Top-N momentum (daily vectorized):
 
 | annual_return | annual_vol | sharpe | max_drawdown | total_return | sortino | calmar | information_ratio |
 |---------------|------------|--------|--------------|--------------|---------|--------|-------------------|
 | 0.1858        | 0.1102     | 1.5473 | -0.0643      | 0.4780       | 2.4103  | 2.8895 | nan               |
+
+Example results for event-driven SMA (minute bars):
+
+| num_trades | win_rate | profit_factor | avg_win | avg_loss | max_win | max_loss |
+|------------|----------|---------------|---------|----------|---------|----------|
+| 37         | 0.2973   | 1.2227        | 37.21   | -12.87   | 104.98  | -33.35   |
 
 ---
 
@@ -168,6 +197,8 @@ Features:
 
 👉 This app is highly recommended for showcasing the project.  
 
+![Streamlit GUI](docs/Streamlit_screenshot.png)
+
 ---
 
 ## 🧪 Tests
@@ -181,9 +212,10 @@ pytest -q
 ## 🔮 Future Improvements
 - Add more advanced strategies (pairs trading, factor models, CTA futures)  
 - Expand portfolio allocation methods (Kelly, risk parity, volatility targeting)  
-- Integrate live data (tushare, Alpaca API)  
+- Integrate live data (tushare, Alpaca API, ccxt for crypto)  
 - Deploy full Streamlit/Flask dashboard with parameter tuning  
 - Continuous Integration (GitHub Actions / GitLab CI)  
+- More order types (stop/limit, latency modeling)
 
 ---
 
