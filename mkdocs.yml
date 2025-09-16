@@ -1,0 +1,16 @@
+site_name: QBT-Lite Documentation
+repo_url: https://github.com/LinShuyue2003/qbt-lite
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Architecture: architecture.md
+  - Strategies: strategies.md
+  - Data Sources: data.md
+  - Reporting & Metrics: reporting.md
+  - CLI Reference: cli.md
+  - Streamlit Dashboard: streamlit.md
+  - Roadmap: roadmap.md
+  - FAQ: faq.md
