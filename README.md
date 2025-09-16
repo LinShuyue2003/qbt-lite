@@ -25,7 +25,7 @@ Designed as both a **learning-friendly framework** and a **portfolio project** s
 
 ## ⚙️ Tech Stack
 - **Python 3.10+**
-- **pandas**, **numpy** for data handling & calculations  
+- **pandas**, **numpy**, **tabulate** for data handling & calculations  
 - **matplotlib** for visualization  
 - **pytest** for testing  
 - **streamlit** + **plotly** (optional, for interactive UI)  
@@ -50,7 +50,7 @@ pip install -e .
 
 Optional features:
 ```bash
-pip install 'qbt-lite[interactive]'  # streamlit, plotly, yfinance, pytest, pyyaml
+pip install 'qbt-lite'  # streamlit, plotly, yfinance, pytest, pyyaml
 ```
 
 ### 2. Run a Demo
