@@ -1,30 +1,31 @@
 # QBT-Lite 📈  
 A lightweight quantitative backtesting framework in Python
 
+![CI](https://github.com/LinShuyue2003/qbt-lite/actions/workflows/ci.yml/badge.svg)
+
 ---
 
 ## 🌟 Project Overview
-QBT-Lite is a **from-scratch quantitative backtesting framework** written in Python.  
-It covers the entire workflow:  
+QBT-Lite is a **lightweight quantitative backtesting framework** written in Python.  
+It covers the full workflow:  
 **data import → strategy execution → order simulation → performance evaluation → automated reporting → interactive visualization**.
 
-This project is designed for **learning purposes** and as a **portfolio project** to demonstrate quantitative research and engineering skills.
+Designed as both a **learning-friendly framework** and a **portfolio project** showcasing quantitative research & engineering skills.
 
 **Resume Highlights:**
-- Built an end-to-end backtesting framework from data loading to reporting  
+- End-to-end backtesting: from data loading to reporting  
 - Supports **multi-asset portfolio backtesting** and strategy evaluation  
-- Includes multiple trading strategies (SMA, Momentum, Bollinger Bands, RSI, MACD)  
-- Provides key metrics (Sharpe, Sortino, Calmar, Max Drawdown, etc.)  
-- Exports automated reports (CSV, Markdown, PNG charts)  
-- Comes with an **interactive Streamlit app** for easy strategy testing  
+- Multiple trading strategies (SMA, Momentum, Bollinger Bands, RSI, MACD)  
+- Key metrics (Sharpe, Sortino, Calmar, Max Drawdown, etc.)  
+- Automated reports (CSV, Markdown, PNG charts)  
+- Interactive **Streamlit app** for strategy testing  
 - **NEW in v0.3.0**: Event-driven backtesting engine (intraday), trade-level metrics (win rate, profit factor, etc.)
 
 ---
 
 ## ⚙️ Tech Stack
 - **Python 3.10+**
-- **pandas** for data handling  
-- **numpy** for calculations  
+- **pandas**, **numpy** for data handling & calculations  
 - **matplotlib** for visualization  
 - **pytest** for testing  
 - **streamlit** + **plotly** (optional, for interactive UI)  
@@ -32,43 +33,13 @@ This project is designed for **learning purposes** and as a **portfolio project*
 
 ---
 
-## 📂 Project Structure
-```
-qbt-lite/
-│── qbt/
-│   ├── core/              # Engine, broker, portfolio, metrics, event_engine (NEW)
-│   ├── data/              # Data loading utilities
-│   ├── strategies/        # Strategy library (SMA, Momentum, TA strategies)
-│   ├── analytics/         # Extended metrics (Sortino, Calmar, Trade-level) (NEW)
-│   └── report/            # Automated reporting module
-│
-│── examples/
-│   ├── run_sma_example.py          # SMA strategy demo
-│   ├── run_momentum_example.py     # Single-asset momentum demo
-│   ├── run_multi_momentum.py       # Multi-asset Top-N momentum demo
-│   ├── run_event_driven_demo.py    # Event-driven intraday demo (NEW)
-│   └── configs/                    # Example config files (YAML/JSON)
-│
-│── reports/                        # Auto-generated reports (CSV/Markdown/PNG)
-│── streamlit_app.py                # Interactive Streamlit dashboard (highlighted)
-│── tests/                          # Basic pytest unit tests
-│── pyproject.toml                   # Packaging & dependencies
-│── README.md
-│── CHANGELOG.md
-```
-
----
-
 ## 🚀 Quick Start
 
-### 1. Clone repository
+### 1. Installation
 ```bash
 git clone https://github.com/LinShuyue2003/qbt-lite.git
 cd qbt-lite
-```
 
-### 2. Setup environment
-```bash
 python -m venv .venv
 source .venv/bin/activate   # Linux / Mac
 .\.venv\Scripts\Activate.ps1   # Windows PowerShell
@@ -77,144 +48,84 @@ pip install -U pip
 pip install -e .
 ```
 
-For optional features:
+Optional features:
 ```bash
-pip install pyyaml streamlit yfinance plotly pytest
+pip install 'qbt-lite[interactive]'  # streamlit, plotly, yfinance, pytest, pyyaml
 ```
 
-### 3. Run examples
-#### SMA strategy
+### 2. Run a Demo
+Run SMA strategy:
 ```bash
 python -m examples.run_sma_example
 ```
-
-#### Single-asset momentum
+Run momentum strategy with CLI:
 ```bash
-python -m examples.run_momentum_example
+qbt-lite --strategy momentum --symbol MOCK --lookback 60 --report_name cli_mom
 ```
 
-#### Multi-asset Top-N momentum (using config file)
-```bash
-python -m qbt.cli --strategy topn_momentum --config examples/configs/multi_momentum.yml --report_name demo_multi
-```
-
+### 3. View Reports
 Reports are saved in `reports/`:
 - Performance metrics (`.csv`, `.md`)  
 - Equity curve (`.png`)  
 - Drawdown curve (`.png`)  
 
----
-
-## 🖥️ Command Line Interface (CLI)
-QBT-Lite comes with a CLI entry point:
-
-```bash
-qbt-lite --strategy momentum --symbol MOCK --lookback 60 --report_name cli_mom
-```
-
-Or equivalently:
-```bash
-python -m qbt.cli --strategy momentum --symbol MOCK --lookback 60 --report_name cli_mom
-```
-
-Available strategies:
-- `sma` → Moving Average Crossover  
-- `momentum` → Single-asset momentum  
-- `topn_momentum` → Multi-asset Top-N momentum  
-- `bbands` → Bollinger Bands breakout  
-- `rsi` → RSI mean reversion  
-- `macd` → MACD crossover  
+![Equity Curve](docs/event_driven_demo_equity.png)
 
 ---
 
-## ⏱️ Event-Driven Backtest (NEW in v0.3.0)
-Run the new intraday event-driven demo:
-```bash
-python -m examples.run_event_driven_demo
-```
-Features:
-- Processes **minute bars** with event queue: Market → Strategy → Order → Fill  
+## 🔹 Features
+
+### Daily Backtests
+- Vectorized backtesting on daily bars  
+- Configurable via CLI or YAML  
+- Supports multi-asset Top-N momentum  
+
+### Event-Driven Backtests (NEW 🚀)
+- Processes **intraday/minute bars** via event queue (Market → Strategy → Order → Fill)  
 - Broker applies **commission + slippage**  
-- Portfolio logs **fills & equity**  
-- Produces both **return-based** and **trade-level** metrics  
+- Portfolio logs fills & equity  
+- Produces both return-based & trade-level metrics  
 
-Outputs (in `reports/`):
-- `event_driven_demo_metrics.csv` / `.md`
-- `event_driven_demo_equity.png` / `event_driven_demo_drawdown.png`
-
-![Event-driven Equity Curve](docs/event_driven_demo_equity.png)
-
----
-
-## 📊 Example Performance Metrics
-Example results for multi-asset Top-N momentum (daily vectorized):
-
-| annual_return | annual_vol | sharpe | max_drawdown | total_return | sortino | calmar | information_ratio |
-|---------------|------------|--------|--------------|--------------|---------|--------|-------------------|
-| 0.1858        | 0.1102     | 1.5473 | -0.0643      | 0.4780       | 2.4103  | 2.8895 | nan               |
-
-Example results for event-driven SMA (minute bars):
-
-| num_trades | win_rate | profit_factor | avg_win | avg_loss | max_win | max_loss |
-|------------|----------|---------------|---------|----------|---------|----------|
-| 37         | 0.2973   | 1.2227        | 37.21   | -12.87   | 104.98  | -33.35   |
-
----
-
-## 📡 Real Market Data
-You can fetch real data with **yfinance**:
-
-```python
-import yfinance as yf, pandas as pd
-df = yf.download("AAPL", start="2018-01-01", progress=False)
-df = df.rename(columns={
-    "Open":"open","High":"high","Low":"low","Close":"close","Volume":"volume"
-}).reset_index().rename(columns={"Date":"datetime"})
-df.to_csv("examples/data_sample/AAPL.csv", index=False)
-```
-
-Then run:
-```bash
-python -m qbt.cli --strategy momentum --symbol AAPL --data_csv examples/data_sample/AAPL.csv --lookback 60 --report_name aapl_mom
-```
-
----
-
-## 📈 Interactive Dashboard (Streamlit) ⭐
-The **Streamlit app** is the easiest way to experiment with strategies.
-
-Run:
+### Interactive Dashboard
+Run Streamlit app:
 ```bash
 python -m streamlit run streamlit_app.py
 ```
-
-Features:
-- Upload CSV data (`datetime, open, high, low, close, volume`)  
-- Choose strategy (SMA, Momentum, Bollinger, RSI, MACD)  
-- Set parameters interactively  
-- View equity curve in real time  
-- Export full reports to `reports/`  
-
-👉 This app is highly recommended for showcasing the project.  
+Features: upload CSV, choose strategy, set parameters, see equity in real time.  
 
 ![Streamlit GUI](docs/Streamlit_screenshot.png)
 
 ---
 
-## 🧪 Tests
-Run basic unit tests with:
+## 📊 Example Metrics
+
+| annual_return | sharpe | sortino | calmar | max_drawdown |
+|---------------|--------|---------|--------|--------------|
+| 0.1858        | 1.5473 | 2.4103  | 2.8895 | -0.0643      |
+
+Trade-level (event-driven SMA, minute bars):  
+
+| num_trades | win_rate | profit_factor | avg_win | avg_loss |
+|------------|----------|---------------|---------|----------|
+| 37         | 0.2973   | 1.2227        | 37.21   | -12.87   |
+
+---
+
+## 🧪 Tests & CI
+Run unit tests:
 ```bash
 pytest -q
 ```
 
+GitHub Actions CI included.
+
 ---
 
-## 🔮 Future Improvements
-- Add more advanced strategies (pairs trading, factor models, CTA futures)  
-- Expand portfolio allocation methods (Kelly, risk parity, volatility targeting)  
-- Integrate live data (tushare, Alpaca API, ccxt for crypto)  
-- Deploy full Streamlit/Flask dashboard with parameter tuning  
-- Continuous Integration (GitHub Actions / GitLab CI)  
+## 🔮 Roadmap
+- More advanced strategies (pairs trading, factor models, CTA futures)  
+- Portfolio allocation (Kelly, risk parity, volatility targeting)  
+- Live data integration (tushare, Alpaca API, ccxt for crypto)  
+- Full Streamlit/Flask dashboard with parameter tuning  
 - More order types (stop/limit, latency modeling)
 
 ---
@@ -225,4 +136,4 @@ MIT License
 ---
 
 ## 🤝 Acknowledgements
-This project is for learning and portfolio demonstration only. **Not financial advice.**
+For learning & demonstration purposes only. **Not financial advice.**

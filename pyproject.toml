@@ -1,23 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "qbt-lite"
-version = "0.2.0"
-description = "A minimal teaching-first quant backtester with CLI/config, more strategies, and reports"
-authors = [{name = "Haozheng Li"}]
+version = "0.3.0"
+description = "A lightweight quantitative backtesting framework with CLI, strategies, reporting, and Streamlit dashboard."
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = ["pandas>=2.0","numpy>=1.24","matplotlib>=3.7"]
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{ name = "Su Li", email = "princesslsy2003@gmail.com" }]
+keywords = ["quantitative-finance", "backtesting", "trading", "pandas", "streamlit", "momentum"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+dependencies = [
+  "pandas>=1.5",
+  "numpy>=1.22",
+  "matplotlib>=3.6",
+  "pyyaml>=6.0",
+]
 
 [project.optional-dependencies]
-yaml = ["pyyaml>=6.0"]
-ui = ["streamlit>=1.33","plotly>=5.22"]
+interactive = ["streamlit>=1.28", "plotly>=5.18", "yfinance>=0.2"]
+dev = ["pytest>=7.0", "build>=1.0.0", "twine>=5.0.0"]
 
 [project.scripts]
 qbt-lite = "qbt.cli:main"
 
-[build-system]
-requires = ["setuptools>=68","wheel"]
-build-backend = "setuptools.build_meta"
+[tool.setuptools]
+packages = ["qbt"]
+include-package-data = true
 
-[tool.setuptools.packages.find]
-include = ["qbt*"]
-exclude = ["reports*", "examples*", "tests*"]
+[tool.setuptools.package-data]
+qbt = ["**/*.yml", "**/*.yaml", "**/*.json"]
